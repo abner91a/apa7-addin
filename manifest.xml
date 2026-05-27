@@ -7,18 +7,18 @@
     xsi:type="TaskPaneApp">
 
   <!-- IMPORTANTE: genera un GUID único para tu copia en https://www.guidgenerator.com/ -->
-  <Id>8a3f5d2e-b1c4-4d7e-9f2a-6c8d1e3b4a5f</Id>
+  <Id>b7e3f4a2-9c1d-4e8f-a532-7d6e2c4b1f89</Id>
   <Version>1.0.0.0</Version>
-  <ProviderName>Tu Nombre</ProviderName>
+  <ProviderName>Abner</ProviderName>
   <DefaultLocale>es-ES</DefaultLocale>
   <DisplayName DefaultValue="Referencias APA 7" />
   <Description DefaultValue="Genera referencias y citas en formato APA séptima edición e insértalas directamente en tu documento."/>
-  <IconUrl DefaultValue="https://USUARIO.github.io/apa7-addin/assets/icon-64.png"/>
-  <HighResolutionIconUrl DefaultValue="https://USUARIO.github.io/apa7-addin/assets/icon-128.png"/>
-  <SupportUrl DefaultValue="https://USUARIO.github.io/apa7-addin/"/>
+  <IconUrl DefaultValue="https://abner91a.github.io/apa7-addin/assets/icon-64.png"/>
+  <HighResolutionIconUrl DefaultValue="https://abner91a.github.io/apa7-addin/assets/icon-128.png"/>
+  <SupportUrl DefaultValue="https://abner91a.github.io/apa7-addin/"/>
 
   <AppDomains>
-    <AppDomain>https://USUARIO.github.io</AppDomain>
+    <AppDomain>https://abner91a.github.io</AppDomain>
   </AppDomains>
 
   <Hosts>
@@ -26,7 +26,7 @@
   </Hosts>
 
   <DefaultSettings>
-    <SourceLocation DefaultValue="https://USUARIO.github.io/apa7-addin/src/taskpane.html"/>
+    <SourceLocation DefaultValue="https://abner91a.github.io/apa7-addin/src/taskpane.html"/>
   </DefaultSettings>
 
   <Permissions>ReadWriteDocument</Permissions>
@@ -73,13 +73,13 @@
     </Hosts>
     <Resources>
       <bt:Images>
-        <bt:Image id="Icon.16x16" DefaultValue="https://USUARIO.github.io/apa7-addin/assets/icon-16.png"/>
-        <bt:Image id="Icon.32x32" DefaultValue="https://USUARIO.github.io/apa7-addin/assets/icon-32.png"/>
-        <bt:Image id="Icon.80x80" DefaultValue="https://USUARIO.github.io/apa7-addin/assets/icon-80.png"/>
+        <bt:Image id="Icon.16x16" DefaultValue="https://abner91a.github.io/apa7-addin/assets/icon-16.png"/>
+        <bt:Image id="Icon.32x32" DefaultValue="https://abner91a.github.io/apa7-addin/assets/icon-32.png"/>
+        <bt:Image id="Icon.80x80" DefaultValue="https://abner91a.github.io/apa7-addin/assets/icon-80.png"/>
       </bt:Images>
       <bt:Urls>
         <bt:Url id="GetStarted.LearnMoreUrl" DefaultValue="https://apastyle.apa.org/"/>
-        <bt:Url id="Taskpane.Url" DefaultValue="https://USUARIO.github.io/apa7-addin/src/taskpane.html"/>
+        <bt:Url id="Taskpane.Url" DefaultValue="https://abner91a.github.io/apa7-addin/src/taskpane.html"/>
       </bt:Urls>
       <bt:ShortStrings>
         <bt:String id="GetStarted.Title" DefaultValue="¡Bienvenido a Referencias APA 7!"/>
