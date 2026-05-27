@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Referencias APA 7</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Office JavaScript API -->
+    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="taskpane.css">
+</head>
+<body>
+    <div class="app">
+        <header class="header">
+            <div class="header-mark">
+                <span class="mark-glyph">¶</span>
+                <span class="mark-label">APA 7</span>
+            </div>
+            <h1 class="header-title">Referencias <em>académicas</em></h1>
+            <p class="header-sub">Séptima edición · Español</p>
+        </header>
+
+        <nav class="tabs" role="tablist">
+            <button class="tab active" data-tab="crear" role="tab">Crear</button>
+            <button class="tab" data-tab="lista" role="tab">Mis refs <span class="badge" id="badge-count">0</span></button>
+            <button class="tab" data-tab="ayuda" role="tab">Ayuda</button>
+        </nav>
+
+        <!-- TAB: CREAR -->
+        <section class="panel active" id="tab-crear" role="tabpanel">
+            <label class="field-label">Tipo de fuente</label>
+            <select id="ref-type" class="select">
+                <option value="libro">Libro</option>
+                <option value="capitulo">Capítulo de libro</option>
+                <option value="articulo">Artículo de revista</option>
+                <option value="periodico">Artículo de periódico</option>
+                <option value="web">Página web</option>
+                <option value="tesis">Tesis</option>
+                <option value="informe">Informe / Documento institucional</option>
+                <option value="video">Video (YouTube, etc.)</option>
+            </select>
+
+            <!-- Autores (común a todos) -->
+            <div class="field-block">
+                <label class="field-label">Autores</label>
+                <p class="hint">Un autor por línea. Formato: <code>Apellido, Nombre Segundo</code> · Para institución: <code>[Institución] Nombre</code></p>
+                <textarea id="authors" class="input" rows="3" placeholder="García Márquez, Gabriel José&#10;López Pérez, María"></textarea>
+            </div>
+
+            <!-- Campos dinámicos -->
+            <div id="dynamic-fields"></div>
+
+            <!-- Vista previa -->
+            <div class="preview" id="preview-wrap" hidden>
+                <div class="preview-label">Vista previa</div>
+                <div class="preview-card">
+                    <div class="preview-section">
+                        <span class="preview-tag">Referencia</span>
+                        <div id="preview-ref" class="preview-text"></div>
+                    </div>
+                    <div class="preview-section">
+                        <span class="preview-tag">Cita en texto</span>
+                        <div id="preview-intext" class="preview-text mono"></div>
+                        <div id="preview-intext-narr" class="preview-text mono small"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button id="btn-preview" class="btn btn-ghost">Vista previa</button>
+                <button id="btn-insert-ref" class="btn btn-primary">Insertar referencia</button>
+                <button id="btn-insert-cite" class="btn btn-secondary">Insertar cita</button>
+                <button id="btn-save" class="btn btn-ghost">Guardar en lista</button>
+            </div>
+
+            <div id="status" class="status" role="status"></div>
+        </section>
+
+        <!-- TAB: LISTA -->
+        <section class="panel" id="tab-lista" role="tabpanel">
+            <div class="list-header">
+                <span class="list-count" id="list-count">0 referencias guardadas</span>
+                <button class="btn btn-ghost btn-sm" id="btn-clear-all">Vaciar</button>
+            </div>
+            <div id="ref-list" class="ref-list"></div>
+            <button id="btn-insert-bibliography" class="btn btn-primary btn-full">Insertar lista de referencias ordenada</button>
+            <p class="hint center">Se inserta al final del documento, alfabéticamente, con sangría francesa.</p>
+        </section>
+
+        <!-- TAB: AYUDA -->
+        <section class="panel" id="tab-ayuda" role="tabpanel">
+            <h2 class="help-title">Cómo escribir autores</h2>
+            <ul class="help-list">
+                <li><strong>Persona:</strong> <code>Apellido, Nombre</code> — ej. <code>Vargas Llosa, Mario</code></li>
+                <li><strong>Dos apellidos:</strong> <code>García Márquez, Gabriel</code></li>
+                <li><strong>Institución / grupo:</strong> antepón corchetes: <code>[Organización Mundial de la Salud]</code></li>
+                <li>Para múltiples autores, uno por línea.</li>
+            </ul>
+
+            <h2 class="help-title">Reglas APA 7 aplicadas</h2>
+            <ul class="help-list">
+                <li>1 autor → <code>(Apellido, año)</code></li>
+                <li>2 autores → <code>(Apellido y Apellido, año)</code> en cita parentética; <code>Apellido y Apellido (año)</code> narrativa</li>
+                <li>3+ autores → <code>(Apellido et al., año)</code></li>
+                <li>Hasta 20 autores se listan todos en la referencia; con 21+ se usa elipsis antes del último.</li>
+                <li>Título de libros y revistas en cursiva; títulos de artículos sin cursiva.</li>
+                <li>DOI se escribe como <code>https://doi.org/...</code></li>
+            </ul>
+
+            <h2 class="help-title">Atajos</h2>
+            <ul class="help-list">
+                <li><strong>Vista previa</strong> antes de insertar para revisar.</li>
+                <li><strong>Guardar en lista</strong> acumula referencias para insertar la bibliografía completa al final.</li>
+                <li>Tus referencias se conservan en este navegador entre sesiones.</li>
+            </ul>
+
+            <p class="footer-note">Construido con Office.js · Formato basado en APA Style 7.ª ed.</p>
+        </section>
+    </div>
+
+    <script src="taskpane.js"></script>
+</body>
+</html>
