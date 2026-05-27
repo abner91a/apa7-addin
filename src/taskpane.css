@@ -361,6 +361,20 @@ textarea.input {
     position: relative;
 }
 
+.ref-item-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    cursor: pointer;
+}
+
+.ref-check {
+    margin-top: 3px;
+    accent-color: var(--accent);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
 .ref-item-text {
     font-family: var(--serif);
     font-size: 12.5px;
@@ -368,6 +382,7 @@ textarea.input {
     padding-left: 16px;
     text-indent: -16px;
     color: var(--ink);
+    flex: 1;
 }
 
 .ref-item-text em { font-style: italic; }

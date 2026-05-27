@@ -197,7 +197,7 @@ function formatAuthorsForReference(authors) {
     if (authors.length <= 20) {
         const all = authors.map(fmt);
         const last = all.pop();
-        return all.join(', ') + ', y ' + last;
+        return all.join(', ') + ', & ' + last;
     }
 
     // 21+ autores: primeros 19, elipsis, último
@@ -275,7 +275,7 @@ function buildCapitulo(authors, d) {
         else if (eds.length > 1) {
             const all = eds.map(fmt);
             const last = all.pop();
-            editorsStr = `En ${all.join(', ')} y ${last} (Eds.), `;
+            editorsStr = `En ${all.join(', ')} & ${last} (Eds.), `;
         }
     }
     out.push(seg(editorsStr));
@@ -425,10 +425,64 @@ function getYearForCitation(data) {
 function setupActions() {
     document.getElementById('btn-preview').addEventListener('click', onPreview);
     document.getElementById('btn-insert-ref').addEventListener('click', onInsertRef);
-    document.getElementById('btn-insert-cite').addEventListener('click', onInsertCite);
+    document.getElementById('btn-insert-cite').addEventListener('click', () => onInsertCite(false));
+    document.getElementById('btn-insert-cite-narr').addEventListener('click', () => onInsertCite(true));
     document.getElementById('btn-save').addEventListener('click', onSave);
     document.getElementById('btn-clear-all').addEventListener('click', onClearAll);
     document.getElementById('btn-insert-bibliography').addEventListener('click', onInsertBibliography);
+    document.getElementById('btn-insert-multi-cite').addEventListener('click', onInsertMultiCite);
+}
+
+// Construye la "etiqueta" autor+año sin paréntesis
+function formatCiteLabel(authors, year) {
+    if (authors.length === 0) return '';
+    const surn = (a) => a.group || a.surname;
+    if (authors.length === 1) return `${surn(authors[0])}, ${year}`;
+    if (authors.length === 2) return `${surn(authors[0])} y ${surn(authors[1])}, ${year}`;
+    return `${surn(authors[0])} et al., ${year}`;
+}
+
+async function onInsertMultiCite() {
+    // Recolectar referencias marcadas
+    const checks = document.querySelectorAll('.ref-check:checked');
+    if (checks.length === 0) {
+        setStatus('Selecciona al menos una referencia con la casilla.', true);
+        return;
+    }
+    if (checks.length === 1) {
+        // Caso simple: una sola, igual la insertamos como cita normal
+        const ref = savedRefs.find(r => r.id === checks[0].dataset.id);
+        if (!ref) return;
+        const authors = parseAuthors(ref.authorsRaw);
+        const year = getYearForCitation(ref.data);
+        try {
+            await insertText(formatAuthorsInText(authors, year, false));
+            setStatus('Cita insertada.');
+        } catch (e) { setStatus(e.message, true); }
+        return;
+    }
+
+    // Múltiples: ordenar alfabéticamente y unir con ;
+    const selected = Array.from(checks).map(c =>
+        savedRefs.find(r => r.id === c.dataset.id)
+    ).filter(Boolean);
+
+    selected.sort((a, b) => a.sortKey.localeCompare(b.sortKey, 'es', { sensitivity: 'base' }));
+
+    const parts = selected.map(r => {
+        const authors = parseAuthors(r.authorsRaw);
+        const year = getYearForCitation(r.data);
+        return formatCiteLabel(authors, year);
+    });
+
+    const cite = '(' + parts.join('; ') + ')';
+
+    try {
+        await insertText(cite);
+        setStatus(`Cita múltiple insertada (${selected.length} fuentes).`);
+        // Desmarcar todas
+        document.querySelectorAll('.ref-check').forEach(c => c.checked = false);
+    } catch (e) { setStatus(e.message, true); }
 }
 
 function onPreview() {
@@ -460,15 +514,15 @@ async function onInsertRef() {
     }
 }
 
-async function onInsertCite() {
+async function onInsertCite(narrative = false) {
     const { authors, data } = getFormData();
     if (authors.length === 0) { setStatus('Agrega al menos un autor.', true); return; }
     const year = getYearForCitation(data);
-    const cite = formatAuthorsInText(authors, year, false);
+    const cite = formatAuthorsInText(authors, year, narrative);
 
     try {
         await insertText(cite);
-        setStatus('Cita insertada en el cursor.');
+        setStatus(narrative ? 'Cita narrativa insertada.' : 'Cita parentética insertada.');
     } catch (err) {
         setStatus('Error al insertar: ' + err.message, true);
     }
@@ -535,9 +589,13 @@ function renderList() {
         const item = document.createElement('div');
         item.className = 'ref-item';
         item.innerHTML = `
-            <div class="ref-item-text">${segmentsToHTML(r.segments)}</div>
+            <label class="ref-item-row">
+                <input type="checkbox" class="ref-check" data-id="${r.id}">
+                <div class="ref-item-text">${segmentsToHTML(r.segments)}</div>
+            </label>
             <div class="ref-item-actions">
-                <button data-action="insert" data-id="${r.id}">Insertar</button>
+                <button data-action="insert" data-id="${r.id}">Insertar referencia</button>
+                <button data-action="cite" data-id="${r.id}">Cita</button>
                 <button data-action="delete" data-id="${r.id}">Eliminar</button>
             </div>
         `;
@@ -545,7 +603,8 @@ function renderList() {
     });
 
     wrap.querySelectorAll('button[data-action]').forEach(b => {
-        b.addEventListener('click', async () => {
+        b.addEventListener('click', async (e) => {
+            e.preventDefault();
             const id = b.dataset.id;
             const ref = savedRefs.find(r => r.id === id);
             if (!ref) return;
@@ -553,6 +612,13 @@ function renderList() {
                 try {
                     await insertSegmentsAsParagraph(ref.segments);
                     setStatus('Referencia insertada.');
+                } catch (e) { setStatus(e.message, true); }
+            } else if (b.dataset.action === 'cite') {
+                try {
+                    const authors = parseAuthors(ref.authorsRaw);
+                    const year = getYearForCitation(ref.data);
+                    await insertText(formatAuthorsInText(authors, year, false));
+                    setStatus('Cita insertada.');
                 } catch (e) { setStatus(e.message, true); }
             } else {
                 savedRefs = savedRefs.filter(r => r.id !== id);

@@ -74,9 +74,10 @@
 
             <div class="actions">
                 <button id="btn-preview" class="btn btn-ghost">Vista previa</button>
-                <button id="btn-insert-ref" class="btn btn-primary">Insertar referencia</button>
-                <button id="btn-insert-cite" class="btn btn-secondary">Insertar cita</button>
                 <button id="btn-save" class="btn btn-ghost">Guardar en lista</button>
+                <button id="btn-insert-cite" class="btn btn-secondary" title="(Apellido, año)">Cita parentética</button>
+                <button id="btn-insert-cite-narr" class="btn btn-secondary" title="Apellido (año)">Cita narrativa</button>
+                <button id="btn-insert-ref" class="btn btn-primary">Insertar referencia completa</button>
             </div>
 
             <div id="status" class="status" role="status"></div>
@@ -88,9 +89,11 @@
                 <span class="list-count" id="list-count">0 referencias guardadas</span>
                 <button class="btn btn-ghost btn-sm" id="btn-clear-all">Vaciar</button>
             </div>
+            <p class="hint">Marca las casillas para hacer una <strong>cita múltiple</strong> tipo <code>(Hernández, 2010; Romero, 2012)</code>.</p>
             <div id="ref-list" class="ref-list"></div>
+            <button id="btn-insert-multi-cite" class="btn btn-secondary btn-full">Insertar cita múltiple con seleccionadas</button>
             <button id="btn-insert-bibliography" class="btn btn-primary btn-full">Insertar lista de referencias ordenada</button>
-            <p class="hint center">Se inserta al final del documento, alfabéticamente, con sangría francesa.</p>
+            <p class="hint center">La lista de referencias se inserta al final del documento, alfabéticamente, con sangría francesa.</p>
         </section>
 
         <!-- TAB: AYUDA -->
